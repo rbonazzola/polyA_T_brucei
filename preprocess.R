@@ -8,6 +8,9 @@ filter_reads <- function(dat, min_median_tail_t0=MIN_MEDIAN_TAIL_T0) {
 
   dat[, barcode := as.integer(barcode)]
   
+  times <- c(0, 10, 30, 60, 90, 120, 180)
+  dat[, time := times[barcode]]
+
   dat[poly_tail_length < 0, poly_tail_length := 0]
 
   dat[, median_tail_t0 := median(poly_tail_length), by = .(alignment_genome, barcode)]
