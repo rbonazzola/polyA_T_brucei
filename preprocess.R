@@ -8,18 +8,18 @@ filter_reads <- function(dat, min_median_tail_t0=MIN_MEDIAN_TAIL_T0) {
 
   dat[, barcode := as.integer(barcode)]
   
+  dat[poly_tail_length < 0, poly_tail_length := 0]
+
+  dat[, median_tail_t0 := median(poly_tail_length), by = .(alignment_genome, barcode)]
+
   good_transcripts <- dat[
     barcode == 1 &
       class != "None" &
-      TTS_prox == "yes" &
-      poly_tail_length > 0,
-    .(median_tail_t0 = median(poly_tail_length, na.rm = TRUE)),
-    by = alignment_genome
-  ][median_tail_t0 >= min_median_tail_t0, alignment_genome]
+      TTS_prox == "yes"
+    ][median_tail_t0 >= min_median_tail_t0, unique(alignment_genome)]
   
   dat_filtered <- dat[alignment_genome %in% good_transcripts]
   dat_filtered <- dat_filtered[ class != "None" & TTS_prox == "yes"]
-  dat_filtered[poly_tail_length < 0, poly_tail_length := 0]
 
   return(dat_filtered)
 }
