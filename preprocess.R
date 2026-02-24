@@ -19,6 +19,8 @@ filter_reads <- function(dat, min_median_tail_t0=MIN_MEDIAN_TAIL_T0) {
   
   dat_filtered <- dat[alignment_genome %in% good_transcripts]
   dat_filtered <- dat_filtered[ class != "None" & TTS_prox == "yes"]
+  dat_filtered[poly_tail_length < 0, poly_tail_length := 0]
+
   return(dat_filtered)
 }
 
